@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+	<script src="vue.js"></script>
+	<style type="text/css">
+	code{
+		font-size:1.5em;
+	}
+	div{
+		display:inline-block;
+		vertical-align:top;
+	}
+	path{
+		opacity:0.7;
+	}
+	path:hover{
+		opacity:1;
+	}
+	p{
+		margin:40px;
+	}
+	</style>
+</head>
+<body>
+
+	<div id="chart"></div>
+
+	<div>
+
+		<div id="demo">
+		  	<input v-model="dataset">
+		  	<p></p>
+		  	<pre><code class="javascript">
+
+var dataset = [{{ dataset }}];</code></pre>
+		</div>
+	  	
+
+		<pre><code class="javascript">
+var width = 460,
+    height = 300,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.category20();
+
+var pie = d3.layout.pie();
+
+var arc = d3.svg.arc()
+    .innerRadius(radius - 100)
+    .outerRadius(radius - 50);
+
+var svg = d3.select("#chart").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var path = svg.selectAll("path")
+    .data(pie(dataset))
+  .enter().append("path")
+    .attr("fill", function(d, i) { return color(i); })
+    .attr("d", arc);
+		</code></pre>
+	</div>
+	<script src="//d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript">
+
+	var demo = new Vue({
+	  el: '#demo',
+	  data: {
+	    dataset: "1,2,3,4,5"
+	  }
+	})
+
+	demo.$watch("dataset", function(newVal, oldVal){
+
+		dataset = newVal.split(',');
+
+		createPie(dataset);
+
+	});
+
+	function createPie(dataset){
+		
+		d3.selectAll("#chart > *").remove();
+
+		var width = 460,
+		    height = 300,
+		    radius = Math.min(width, height) / 2;
+
+		var color = d3.scale.category20();
+
+		var pie = d3.layout.pie();
+
+		var arc = d3.svg.arc()
+		    .innerRadius(radius - 100)
+		    .outerRadius(radius - 50);
+
+		var svg = d3.select("#chart").append("svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		    .append("g")
+		    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		var path = svg.selectAll("path")
+		    .data(pie(dataset))
+		  .enter().append("path")
+		    .attr("fill", function(d, i) { return color(i); })
+		    .attr("d", arc);
+
+	}
+
+	createPie([1,2,3,4,5]);
+
+	</script>
+</body>
+</html>
